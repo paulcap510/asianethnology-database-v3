@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import DOMPurify from 'dompurify';
 
 const Search = () => {
   const [query, setQuery] = useState('');
@@ -16,29 +17,48 @@ const Search = () => {
       });
   }, []);
 
-  const handleSearch = (e) => {
+  const checkRateLimit = async () => {
+    try {
+      const response = await fetch('/.netlify/functions/rate-limit');
+      if (response.status === 429) {
+        alert('Too many requests. Please try again later.');
+        return false;
+      }
+      return true;
+    } catch (error) {
+      console.error('Error checking rate limit:', error);
+      return false;
+    }
+  };
+
+  const handleSearch = async (e) => {
     e.preventDefault();
     console.log(`Searching for: ${query}`);
 
-    // Filter articles based on the query
+    // Check rate limit before proceeding
+    const allowed = await checkRateLimit();
+    if (!allowed) return;
+
+    const cleanQuery = DOMPurify.sanitize(query);
+
     const filteredResults = allArticles.filter(
       (article) =>
-        article.Title.toLowerCase().includes(query.toLowerCase()) ||
-        article.Author.toLowerCase().includes(query.toLowerCase()) ||
-        article.Keywords.toLowerCase().includes(query.toLowerCase()) ||
-        article.Abstract.toLowerCase().includes(query.toLowerCase()) ||
+        article.Title.toLowerCase().includes(cleanQuery.toLowerCase()) ||
+        article.Author.toLowerCase().includes(cleanQuery.toLowerCase()) ||
+        article.Keywords.toLowerCase().includes(cleanQuery.toLowerCase()) ||
+        article.Abstract.toLowerCase().includes(cleanQuery.toLowerCase()) ||
         article.JournalIssueAndVolume.toLowerCase().includes(
-          query.toLowerCase()
+          cleanQuery.toLowerCase()
         ) ||
-        article.ArticleType.toLowerCase().includes(query.toLowerCase()) ||
-        article.Subtitle.toLowerCase().includes(query.toLowerCase())
+        article.ArticleType.toLowerCase().includes(cleanQuery.toLowerCase()) ||
+        article.Subtitle.toLowerCase().includes(cleanQuery.toLowerCase())
     );
 
     setResults(filteredResults);
   };
 
   return (
-    <div className="bg-orange-500 min-h-screen flex flex-col items-center justify-center px-4">
+    <div className="bg-orange-500 min-h-screen w-full flex flex-col items-center justify-center px-4">
       <h1
         className={`text-4xl font-extrabold text-center text-white mb-8 ${
           results.length > 0 ? 'mt-12' : ''
