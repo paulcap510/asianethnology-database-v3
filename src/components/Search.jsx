@@ -66,7 +66,7 @@ const Search = () => {
         Asian Ethnology Search
       </h1>
       <h5 className="text-white mb-4">
-        Please note: initial search may take up to 10 seconds to return results.
+        Please note: initial search may take up to 5 seconds to return results.
       </h5>
 
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-6xl">
