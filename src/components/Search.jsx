@@ -35,7 +35,6 @@ const Search = () => {
     e.preventDefault();
     console.log(`Searching for: ${query}`);
 
-    // Check rate limit before proceeding
     const allowed = await checkRateLimit();
     if (!allowed) return;
 
