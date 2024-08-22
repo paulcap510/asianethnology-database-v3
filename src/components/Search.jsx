@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import DOMPurify from 'dompurify';
+import Pagination from './Pagination';
 
 const Search = () => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
   const [allArticles, setAllArticles] = useState([]);
+
+  // PAGINATION
+  const [currentPage, setCurrentPage] = useState(1);
+  const entriesPerPage = 10;
 
   useEffect(() => {
     fetch('/articles.json')
@@ -54,7 +59,13 @@ const Search = () => {
     );
 
     setResults(filteredResults);
+    setCurrentPage(1); // Reset to the first page on a new search
   };
+
+  // Get current results based on pagination
+  const indexOfLastEntry = currentPage * entriesPerPage;
+  const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
+  const currentEntries = results.slice(indexOfFirstEntry, indexOfLastEntry);
 
   return (
     <div className="bg-orange-500 min-h-screen w-full flex flex-col items-center justify-center px-4">
@@ -86,7 +97,7 @@ const Search = () => {
           </button>
         </form>
         <div className="max-h-96 overflow-y-auto">
-          {results.length > 0 ? (
+          {currentEntries.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="min-w-full bg-white border border-gray-300">
                 <thead className="sticky top-0 bg-gray-200">
@@ -115,7 +126,7 @@ const Search = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {results.map((result, index) => (
+                  {currentEntries.map((result, index) => (
                     <tr key={index} className="hover:bg-gray-100">
                       <td className="py-2 px-4 border-b border-gray-300">
                         {result.JournalIssueAndVolume}
@@ -149,6 +160,13 @@ const Search = () => {
                   ))}
                 </tbody>
               </table>
+
+              <Pagination
+                entriesPerPage={entriesPerPage}
+                totalEntries={results.length} // <-- Pass results.length instead of data.length
+                paginate={setCurrentPage}
+                currentPage={currentPage}
+              />
             </div>
           ) : (
             <p className="text-gray-500 text-center">No results found</p>
