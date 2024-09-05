@@ -4,7 +4,16 @@
     "ArticleType": "article",
     "Title": "Editors’ Note",
     "Subtitle": "N/A",
-    "Author": "Benjamin Dorman, Frank J. Korom",
+    "Authors": [
+      {
+        "Name": "Benjamin Dorman",
+        "Affiliation": "Nanzan University"
+      },
+      {
+        "Name": "Frank J. Korom",
+        "Affiliation": "Boston University"
+      }
+    ],
     "Keywords": "",
     "Abstract": "",
     "URL": "https://asianethnology.org/articles/2452",
