@@ -15,7 +15,16 @@
     "ArticleType": "article",
     "Title": "Rethinking Regions",
     "Subtitle": "Locality and Circulation in South Asia",
-    "Author": "Anne Murphy, Philipp Zehmisch",
+    "Authors": [
+      {
+        "Name": "Anne Murphy",
+        "Affiliation": "University of British Columbia"
+      },
+      {
+        "Name": "Philipp Zehmisch",
+        "Affiliation": "University of Heidelberg"
+      }
+    ],
     "Keywords": "region, area studies, locality, circulation, South Asia",
     "Abstract": "The intellectual formation of “area studies” has been subject to significant critique in the early twenty-first century; at the same time, intellectual work continues to be grounded in particular regions and understandings of regions (Fleschenberg and Baumann 2020; Harootunian 2012; Spivak 2008). The “region,” therefore, remains salient. The special issue “Rethinking Regions” seeks to engage with our understanding of the “region” and its continuing relevance, with simultaneous recognition that the cultural formations in specific regions are intimately linked to a broad range of cultural practices across a wide geographic range, and wider cultural forms have particular local articulations. The issue therefore presents case studies that deconstruct and destabilize bounded or fixed notions of the region and replace them with a more dynamic approach focused on context, temporality, and interconnected spatiality. This introductory article lays out the conceptual parameters of the special issue and discusses each article in the context of the larger theme.",
     "URL": "https://asianethnology.org/articles/2453",
