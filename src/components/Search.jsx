@@ -38,31 +38,42 @@ const Search = () => {
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    console.log(`Searching for: ${query}`);
 
     const allowed = await checkRateLimit();
     if (!allowed) return;
 
     const cleanQuery = DOMPurify.sanitize(query);
 
-    const filteredResults = allArticles.filter(
-      (article) =>
+    const filteredResults = allArticles.filter((article) => {
+      // Check if the query matches any author name
+      const authorMatch = article.Authors
+        ? article.Authors.some((author) =>
+            author.Name.toLowerCase().includes(cleanQuery.toLowerCase())
+          )
+        : false;
+
+      // Filter by the query matching any other fields (besides authors)
+      return (
+        authorMatch ||
         article.Title.toLowerCase().includes(cleanQuery.toLowerCase()) ||
-        article.Author.toLowerCase().includes(cleanQuery.toLowerCase()) ||
-        article.Keywords.toLowerCase().includes(cleanQuery.toLowerCase()) ||
-        article.Abstract.toLowerCase().includes(cleanQuery.toLowerCase()) ||
-        article.JournalIssueAndVolume.toLowerCase().includes(
-          cleanQuery.toLowerCase()
-        ) ||
+        (article.Keywords &&
+          article.Keywords.toLowerCase().includes(cleanQuery.toLowerCase())) ||
+        (article.Abstract &&
+          article.Abstract.toLowerCase().includes(cleanQuery.toLowerCase())) ||
+        (article.JournalIssueAndVolume &&
+          article.JournalIssueAndVolume.toLowerCase().includes(
+            cleanQuery.toLowerCase()
+          )) ||
         article.ArticleType.toLowerCase().includes(cleanQuery.toLowerCase()) ||
-        article.Subtitle.toLowerCase().includes(cleanQuery.toLowerCase())
-    );
+        (article.Subtitle &&
+          article.Subtitle.toLowerCase().includes(cleanQuery.toLowerCase()))
+      );
+    });
 
     setResults(filteredResults);
-    setCurrentPage(1); // Reset to the first page on a new search
+    setCurrentPage(1);
   };
 
-  // Get current results based on pagination
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
   const currentEntries = results.slice(indexOfFirstEntry, indexOfLastEntry);
@@ -115,7 +126,7 @@ const Search = () => {
                       Subtitle
                     </th>
                     <th className="py-2 px-4 border-b-2 border-gray-300">
-                      Author
+                      Authors
                     </th>
                     <th className="py-2 px-4 border-b-2 border-gray-300">
                       Keywords
@@ -141,7 +152,11 @@ const Search = () => {
                         {result.Subtitle}
                       </td>
                       <td className="py-2 px-4 border-b border-gray-300">
-                        {result.Author}
+                        {result.Authors && result.Authors.length > 0
+                          ? result.Authors.map((author) => author.Name).join(
+                              ', '
+                            )
+                          : 'No Author Info'}
                       </td>
                       <td className="py-2 px-4 border-b border-gray-300">
                         {result.Keywords}
@@ -163,7 +178,7 @@ const Search = () => {
 
               <Pagination
                 entriesPerPage={entriesPerPage}
-                totalEntries={results.length} // <-- Pass results.length instead of data.length
+                totalEntries={results.length}
                 paginate={setCurrentPage}
                 currentPage={currentPage}
               />
